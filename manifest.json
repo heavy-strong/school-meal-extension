@@ -1,0 +1,24 @@
+{
+    "name": "DGSW 오늘의 급식",
+    "version": "1.0",
+    "description": "대구소프트웨어 고등학교 급식보가",
+    "icons": {
+        "128": "icon/icon128.png",
+        "48": "icon/icon48.png",
+        "16": "icon/icon16.png"
+    },
+    "permissions": [
+        "storage",
+        "http://jrady721.cafe24.com/"
+    ],
+    "browser_action": {
+        "default_popup": "public/index.html"
+    },
+    "background": {
+        "scripts": [
+            "background.js"
+        ],
+        "persistent": false
+    },
+    "manifest_version": 2
+}
