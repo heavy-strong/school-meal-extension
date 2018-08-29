@@ -1,7 +1,7 @@
 {
-    "name": "DGSW 오늘의 급식",
-    "version": "1.0",
-    "description": "대구소프트웨어 고등학교 급식보가",
+    "name": "전국 급식 보기",
+    "version": "1.1",
+    "description": "대구소프트웨어 고등학교 급식보기",
     "icons": {
         "128": "icon/icon128.png",
         "48": "icon/icon48.png",
@@ -16,6 +16,7 @@
     },
     "background": {
         "scripts": [
+            "public/js/jquery-3.3.1.js",
             "background.js"
         ],
         "persistent": false
