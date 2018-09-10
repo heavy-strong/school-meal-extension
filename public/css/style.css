@@ -1,16 +1,18 @@
-html {
-    overflow: scroll;
-    overflow-x: hidden;
-}
+/* initialize */
+* { margin: 0; padding: 0; box-sizing: border-box; color: #333; font-size: 1em;}
+
+html { overflow: scroll; overflow-x: hidden; }
 ::-webkit-scrollbar {
     width: 0;  /* remove scrollbar space */
     background: transparent;  /* optional: just make scrollbar invisible */
 }
-
 body {
     min-width: 220px;
     padding: 20px;
-    /*height: 600px;*/
+}
+
+.controlles {
+    text-align: center;
 }
 
 #title {
@@ -32,12 +34,6 @@ body {
 .meal h3 {
     color: rgb(84, 173, 196);
     margin: 0 0 5px 0;
-}
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
 }
 
 ul li {
@@ -69,17 +65,16 @@ a {
     width: 100%;
 }
 .radio-group input[type=radio] {
-    /*border: 1px solid rgb(84, 173, 196);*/
+    color: black;
     background: rgb(84, 173, 196);
 }
 
-.radio-group .form-group {
-    /*position: relative;*/
-    /*text-align: left;*/
-    /*left: 50%;*/
-    /*transform: translateX(-50%);*/
-    /*float: left;*/
+.link {
+    color: rgb(84, 173, 196);
 }
-/*.radio-group {*/
-    /*text-align: left;*/
-/*}*/
+.link:hover {
+    color: rgb(82, 130, 158);
+}
+.link:not(:first-child) {
+    margin-left: 30px;
+}

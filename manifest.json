@@ -1,7 +1,7 @@
 {
     "name": "전국 급식 보기",
-    "version": "1.1",
-    "description": "대구소프트웨어 고등학교 급식보기",
+    "version": "1.2.1",
+    "description": "전국 유치원, 초, 중, 고등학교 급식 보기",
     "icons": {
         "128": "icon/icon128.png",
         "48": "icon/icon48.png",
@@ -9,7 +9,9 @@
     },
     "permissions": [
         "storage",
-        "http://jrady721.cafe24.com/"
+        "notifications",
+        "http://jrady721.cafe24.com/",
+        "http://115.68.22.74/"
     ],
     "browser_action": {
         "default_popup": "public/index.html"
@@ -21,5 +23,8 @@
         ],
         "persistent": false
     },
+    "web_accessible_resources": [
+        "icon/icon48.png"
+    ],
     "manifest_version": 2
 }
