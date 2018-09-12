@@ -1,11 +1,13 @@
+// default
 const keys = ['office', 'school', 'level']
 const baseURL = 'http://jrady721.cafe24.com'
 
+// 오늘
 let date = new Date()
 
 $(function () {
     // 설정된 오늘의 급식 불러오기
-    chrome.storage.local.get(['breakfast', 'lunch', 'dinner', 'date'], function (result) {
+    chrome.storage.sync.get(['breakfast', 'lunch', 'dinner', 'date'], function (result) {
         chrome.runtime.getBackgroundPage(e => {
             // 만약 현재 날짜의 지금날짜가 동일하다면 로컬에서 불러오고 아니면 다시 로드한다.
             if (result.date === e.getYmd(new Date())) {
@@ -21,24 +23,30 @@ $(function () {
     })
 
     // 설정 불러오기
-    chrome.storage.local.get(keys, function (data) {
-        $('#office').val(data.office)
-        $('#school').val(data.school)
-        $(`#level-${data.level}`).attr('checked', true)
-    })
-})
-
-// 내일
-$('#btn-today').click(function () {
-    loading()
-
-    chrome.runtime.getBackgroundPage(e => {
-        $('#date').html(e.getYmd(new Date()))
-        getMenu(e.getYmd(new Date()))
+    chrome.storage.sync.get(keys, function (data) {
+        // 설정이 있을 떄만 설정에 저장
+        if(data.level) {
+            $('#office').val(data.office)
+            $('#school').val(data.school)
+            $(`#level-${data.level}`).attr('checked', true)
+        } else {
+            
+        }
     })
 })
 
 // 오늘
+$('#btn-today').click(function () {
+    loading()
+
+    date = new Date()
+    chrome.runtime.getBackgroundPage(e => {
+        $('#date').html(e.getYmd(date))
+        getMenu(e.getYmd(date))
+    })
+})
+
+// 내일
 $('#btn-next').click(function () {
     loading()
 
@@ -60,6 +68,7 @@ $('#btn-prev').click(function () {
     })
 })
 
+// loading...
 function loading() {
     $('#breakfast').html('로딩중...')
     $('#lunch').html('로딩중...')

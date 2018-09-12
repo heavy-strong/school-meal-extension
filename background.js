@@ -8,16 +8,16 @@ chrome.runtime.onInstalled.addListener(function () {
 })
 
 // 백그라운드
-chrome.storage.local.get(keys, function (setting) {
+chrome.storage.sync.get(keys, function (setting) {
     // 설정이 존재하지 않으면 기본설정으로 설정하고 로드함
     if (!setting.level) {
         option = [{ office: 'dge.go.kr' }, { school: 'D100000282' }, { level: '4' }, { date: getYmd(new Date()) }]
         // 설정
         option.forEach(function (e, i) {
-            chrome.storage.local.set(e, function () {
+            chrome.storage.sync.set(e, function () {
                 // 모두 세팅을 마쳤을 때
                 if (i + 1 === option.length) {
-                    chrome.storage.local.get(keys, function (setting) {
+                    chrome.storage.sync.get(keys, function (setting) {
                         getMenu(getYmd(new Date()), setting)
                     })
                 }
@@ -44,7 +44,7 @@ function getMenu(ymd, setting) {
         if (breakfast === '<ul></ul>') {
             breakfast = '메뉴가 없습니다.'
         }
-        chrome.storage.local.set({ breakfast: breakfast }, function () {
+        chrome.storage.sync.set({ breakfast: breakfast }, function () {
             console.log('set localstorage data!')
         })
     })
@@ -63,7 +63,7 @@ function getMenu(ymd, setting) {
         if (lunch === '<ul></ul>') {
             lunch = '메뉴가 없습니다.'
         }
-        chrome.storage.local.set({ lunch: lunch }, function () {
+        chrome.storage.sync.set({ lunch: lunch }, function () {
             console.log('set localstorage data!')
         })
     })
@@ -82,7 +82,7 @@ function getMenu(ymd, setting) {
         if (dinner === '<ul></ul>') {
             dinner = '메뉴가 없습니다.'
         }
-        chrome.storage.local.set({ dinner: dinner }, function () {
+        chrome.storage.sync.set({ dinner: dinner }, function () {
             console.log('set localstorage data!')
         })
     })
