@@ -1,80 +1,66 @@
 /* initialize */
-* { margin: 0; padding: 0; box-sizing: border-box; color: #333; font-size: 1em;}
+* { margin: 0; padding: 0; box-sizing: border-box; color: #333; font-size: 1em; transition: all .5s;}
 
-html { overflow: scroll; overflow-x: hidden; }
-::-webkit-scrollbar {
-    width: 0;  /* remove scrollbar space */
-    background: transparent;  /* optional: just make scrollbar invisible */
-}
-body {
-    min-width: 220px;
-    padding: 20px;
-}
+html { overflow: scroll; overflow-x: hidden;  }
+body { padding: 20px; }
+ul li { list-style: none; }
+a { text-decoration: none; }
+.hide { display: none; }
+::-webkit-scrollbar { width: 5px; height: 20px; }
+::-webkit-scrollbar-thumb { border-radius: 10px; background: rgb(240, 240, 240); }
+::-webkit-scrollbar-track { border-radius: 10px; }
 
-.controlles {
-    text-align: center;
-}
+/* index page */
+#index { width: 550px; }
 
-#title {
-    font-weight: normal;
-    font-size: 28px;
-    color: rgb(84, 173, 196);
-    text-align: center;
-    margin: 10px auto;
-}
+/* header */
+header { top: -10px; width: 100%; position: relative; display: inline-block;}
+header > * { float: left; line-height: 30px;}
+#title { font-weight: normal; text-align: center; width: 100% !important; font-size: 1.2em; color: rgb(84, 173, 196);}
+header > *:last-child { right: 0; position: absolute; }
 
-.meal {
-    text-align: center;
-    padding: 10px 0;
-    border: 1px solid lightgray;
-    box-shadow: 1px 1px 1px 1px rgb(229, 230, 235);
-    margin: 10px 0;
-}
+/* controllers */
+.controllers { width: 100%; text-align: center; }
+.controllers .btn { width: 100px !important; }
 
-.meal h3 {
-    color: rgb(84, 173, 196);
-    margin: 0 0 5px 0;
-}
+/* meal */
+.meals { width: 100%; position: relative; margin-bottom: 30px; height: 200px; }
+.meal { width: calc(1/3 * 100% - 16px); border-radius: 3px; height: 100%;  margin: 20px 8px; 
+    float: left; text-align: center; border: 1px solid rgb(235, 235, 235); box-shadow: 1px 1px 1px 1px rgb(236, 236, 236); }
 
-ul li {
-    list-style: none;
-}
+.meal:hover { transform: scale(1.05); cursor: pointer; }
+.meal h3 { height: 30px; line-height: 30px; color: rgb(20, 23, 24); border-bottom: 1px solid rgb(236, 236, 236); }
+.meal:hover h3 { background-color: rgb(84, 173 ,196); border-color: rgb(84, 173 ,196); color: white; }
+.meal ul { margin-top: 10px; height: 150px; overflow-y: scroll;}
 
-a {
-    text-decoration: none;
-}
+/* 
+.meal > div { overflow-y: scroll; height: 150px; padding: 10px;}
+.meal > div::-webkit-scrollbar { width: 5px; height: 8px; border-radius: 5px !important; } */
+/* .meal > div::-webkit-scrollbar-thumb { background: rgba(240, 240, 240, .5); } */
+/* .meal > div::-webkit-scrollbar-track { background: #333;  } */
 
-.btn {
-    padding: 5px 7px;
-    border: none;
-    outline: none;
-    background-color: rgb(84, 173, 196);
-    color: white;
-    cursor: pointer;
-}
+/* btn */
+.btn { padding: 5px 7px; border: none; outline: none; background-color: rgb(84, 173 ,196); color: white; cursor: pointer; border-radius: 3px; }
+.btn:not(:last-child) { margin-right: 5px; }
+.btn:hover { background-color: rgb(61, 146, 196); }
 
-.btn:not(:last-child) {
-    margin-right: 5px;
-}
+/* link */
+.link { color: rgb(84, 173, 196); }
+.link:hover { color: rgb(61, 146, 196); }
+.link:not(:first-child) { margin-left: 30px; }
 
-.btn:hover {
-    background-color: rgb(82, 130, 158);
-}
+/* setting page */
+#setting { width: 200px }
+#setting > .container { margin-top: 30px; }
+#setting > .container > div > h3 { margin-bottom: 15px; }
+#setting > .container > div { width: 100%; border: 1px solid rgb(235, 235, 235); box-shadow: 1px 1px 1px 1px rgb(236, 236, 236); margin-bottom: 10px; display: inline-block; text-align: center; padding: 15px 0; }
 
-.form-group {
-    width: 100%;
-}
-.radio-group input[type=radio] {
-    color: black;
-    background: rgb(84, 173, 196);
-}
-
-.link {
-    color: rgb(84, 173, 196);
-}
-.link:hover {
-    color: rgb(82, 130, 158);
-}
-.link:not(:first-child) {
-    margin-left: 30px;
-}
+/* level */
+input#school { width: 90%; height: 25px; padding: 3px; }
+.level > div { margin-left: 28px; width: 100%; }
+[id*=label] {  cursor: pointer; position: relative; float: left; width: 35%; margin-top: 3px !important;  }
+[id*=label] div { background-color: white; border: 1px solid rgb(84, 173 ,196); border-radius: 3px; width: 15px !important; height: 15px !important; float: left; }
+#level-1:checked ~ #label-1 div { background-color: rgb(84, 173 ,196); }
+#level-2:checked ~ #label-2 div { background-color: rgb(84, 173 ,196); }
+#level-3:checked ~ #label-3 div { background-color: rgb(84, 173 ,196); }
+#level-4:checked ~ #label-4 div { background-color: rgb(84, 173 ,196); }

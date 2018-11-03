@@ -10,65 +10,63 @@
 </head>
 
 <body>
-    <!-- 설정 -->
-    <h2 id="title">SETTING</h2>
+    <div id="setting" class="wrap">
+        <!-- 설정 -->
+        <header>
+            <h2 id="title" style="">SETTING</h2>
+        </header>
 
-    <div class="meals">
-        <div class="meal">
-            <h3>교육청(office)</h3>
-            <select name="office" id="office" style="width: 90%; height: 30px;">
-                <option value="sen.go.kr">서울시 교육청</option>
-                <option value="goe.go.kr">경기도 교육청</option>
-                <option value="kwe.go.kr">강원도 교육청</option>
-                <option value="jne.go.kr">전라남도 교육청</option>
-                <option value="jbe.go.kr">전라북도 교육청</option>
-                <option value="gne.go.kr">경상남도 교육청</option>
-                <option value="kbe.go.kr">경상북도 교육청</option>
-                <option value="pen.go.kr">부산광역시 교육청</option>
-                <option value="jje.go.kr">제주자치도 교육청</option>
-                <option value="cne.go.kr">충청남도 교육청</option>
-                <option value="cbe.go.kr">충청북도 교육청</option>
-                <option value="gen.go.kr">광주광역시 교육청</option>
-                <option value="use.go.kr">울산광역시 교육청</option>
-                <option value="dje.go.kr">대전광역시 교육청</option>
-                <option value="ice.go.kr">인천광역시 교육청</option>
-                <option value="dge.go.kr">대구광역시 교육청</option>
-            </select>
-        </div>
-        <div class="meal">
-            <h3>학교코드(school)</h3>
-            <input type="text" id="school" name="school"><br>
-            <button class="btn" style="width: 90%; margin-top: 5px;" id="search">학교코드 검색하기
-            </button>
-        </div>
-        <div class="meal radio-group">
-            <h3>학교분류(level)</h3>
-            <div class="form-group">
-                <input type="radio" id="level-1" name="level" value="1">
-                <label for="level-1">유치원</label>
+        <div class="container">
+            <div class="office">
+                <h3>OFFICE</h3>
+                <select name="office" id="office" style="width: 90%; height: 30px;">
+                    <option value="sen.go.kr">서울시 교육청</option>
+                    <option value="goe.go.kr">경기도 교육청</option>
+                    <option value="kwe.go.kr">강원도 교육청</option>
+                    <option value="jne.go.kr">전라남도 교육청</option>
+                    <option value="jbe.go.kr">전라북도 교육청</option>
+                    <option value="gne.go.kr">경상남도 교육청</option>
+                    <option value="kbe.go.kr">경상북도 교육청</option>
+                    <option value="pen.go.kr">부산광역시 교육청</option>
+                    <option value="jje.go.kr">제주자치도 교육청</option>
+                    <option value="cne.go.kr">충청남도 교육청</option>
+                    <option value="cbe.go.kr">충청북도 교육청</option>
+                    <option value="gen.go.kr">광주광역시 교육청</option>
+                    <option value="use.go.kr">울산광역시 교육청</option>
+                    <option value="dje.go.kr">대전광역시 교육청</option>
+                    <option value="ice.go.kr">인천광역시 교육청</option>
+                    <option value="dge.go.kr">대구광역시 교육청</option>
+                </select>
             </div>
-            <div class="form-group">
-                <input type="radio" id="level-2" name="level" value="2">
-                <label for="level-2">초등학교</label>
+            <div class="school">
+                <h3>SCHOOL</h3>
+                <input type="text" id="school" name="school"><br>
+                <button class="btn" style="width: 90%; margin-top: 5px;" id="search">학교코드 검색하기
+                </button>
             </div>
-            <div class="form-group">
+            <div class="level radio-group">
+                <h3>LEVEL</h3>
+                <div>
+                    <input type="radio" class="hide" id="level-1" name="level" value="1" checked>
+                    <input type="radio" class="hide" id="level-2" name="level" value="2">
+                    <input type="radio" class="hide" id="level-3" name="level" value="3">
+                    <input type="radio" class="hide" id="level-4" name="level" value="4">
 
-                <input type="radio" id="level-3" name="level" value="3">
-                <label for="level-3">중학교</label>
+                    <label id="label-1" for="level-1"><div> </div>유치원</label>
+                    <label id="label-2" for="level-2"><div> </div>초등학교</label>
+                    <label id="label-3" for="level-3"><div> </div>중학교</label>
+                    <label id="label-4" for="level-4"><div> </div>고등학교</label>
+                    </div>
             </div>
-            <div class="form-group">
-                <input type="radio" id="level-4" name="level" value="4">
-                <label for="level-4">고등학교</label>
+            <div class="">
+                <button class="btn" id="ok">설정 저장</button>
+                <button class="btn" id="cancel">뒤로 가기</button>
             </div>
+            <p style="text-align: center; margin-top: 10px;">
+                <a class="link" target="_blank" href="https://github.com/Jrady721/School-meal-extension">GitHub</a>
+                <a class="link" target="_blank" href="http://jrady721.cafe24.com/meal">BLOG</a>
+            </p>
         </div>
-        <div class="meal">
-            <button class="btn" id="ok">설정 저장</button>
-            <button class="btn" id="cancel">뒤로 가기</button>
-        </div>
-        <p style="text-align: center;">
-            <a class="link" target="_blank" href="https://github.com/Jrady721/School-meal-extension">GitHub</a>
-            <a class="link" target="_blank" href="http://jrady721.cafe24.com">BLOG</a>
-        </p>
     </div>
     <script src="../js/jquery-3.3.1.js"></script>
     <script src="../js/script.js"></script>

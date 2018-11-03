@@ -11,12 +11,12 @@ $(function () {
         chrome.runtime.getBackgroundPage(e => {
             // 만약 현재 날짜의 지금날짜가 동일하다면 로컬에서 불러오고 아니면 다시 로드한다.
             if (result.date === e.getYmd(new Date())) {
-                $('#date').html(result.date)
-                $('#breakfast').html(result.breakfast)
-                $('#lunch').html(result.lunch)
-                $('#dinner').html(result.dinner)
+                $('#btn-today').text(result.date)
+                $('#breakfast > ul').html(result.breakfast)
+                $('#lunch > ul').html(result.lunch)
+                $('#dinner > ul').html(result.dinner)
             } else {
-                $('#date').html(e.getYmd(new Date()))
+                $('#btn-today').text(e.getYmd(new Date()))
                 getMenu(e.getYmd(new Date()))
             }
         })
@@ -41,10 +41,21 @@ $('#btn-today').click(function () {
 
     date = new Date()
     chrome.runtime.getBackgroundPage(e => {
-        $('#date').html(e.getYmd(date))
+        $('#btn-today').html(e.getYmd(date))
         getMenu(e.getYmd(date))
     })
 })
+
+$('#btn-today').on('mouseover', function () {
+    $('#btn-today').text('TODAY MEAL')
+
+})
+$('#btn-today').on('mouseleave', function () {
+    chrome.runtime.getBackgroundPage(e => {
+        $('#btn-today').text(e.getYmd(date))
+    })
+})
+
 
 // 내일
 $('#btn-next').click(function () {
@@ -52,7 +63,7 @@ $('#btn-next').click(function () {
 
     chrome.runtime.getBackgroundPage(e => {
         date.setDate(date.getDate() + 1)
-        $('#date').html(e.getYmd(date))
+        $('#btn-today').html(e.getYmd(date))
         getMenu(e.getYmd(date))
     })
 })
@@ -63,82 +74,77 @@ $('#btn-prev').click(function () {
 
     chrome.runtime.getBackgroundPage(e => {
         date.setDate(date.getDate() - 1)
-        $('#date').html(e.getYmd(date))
+        $('#btn-today').html(e.getYmd(date))
         getMenu(e.getYmd(date))
     })
 })
 
 // loading...
 function loading() {
-    $('#breakfast').html('로딩중...')
-    $('#lunch').html('로딩중...')
-    $('#dinner').html('로딩중...')
+    $('#breakfast > ul').html('불러오는 중...')
+    $('#lunch > ul').html('불러오는 중...')
+    $('#dinner > ul').html('불러오는 중...')
 }
 
-// 급식 불러오기
+// 급식메뉴 불러와서 데이터 삽입
 function getMenu(ymd) {
-    chrome.storage.local.get(keys, function (data) {
+    chrome.storage.sync.get(keys, function (data) {
         $.get(`${baseURL}/api/meal/${ymd}/type/1/office/${data.office}/school/${data.school}/level/${data.level}`, function (data) {
             let meal = JSON.parse(data)
-            let breakfast = '<ul>'
+            let breakfast = ''
             if (meal.menus) {
                 meal.menus.forEach(element => {
                     breakfast += '<li>' + element + '</li>'
                 })
             }
-            breakfast += '</ul>'
-            if (breakfast === '<ul></ul>') {
+            if (breakfast === '') {
                 breakfast = '메뉴가 없습니다.'
             }
-            $('#breakfast').html(breakfast)
+            $('#breakfast > ul').html(breakfast)
         })
 
         $.get(`${baseURL}/api/meal/${ymd}/type/2/office/${data.office}/school/${data.school}/level/${data.level}`, function (data) {
             let meal = JSON.parse(data)
-            let lunch = '<ul>'
+            let lunch = ''
             if (meal.menus) {
                 meal.menus.forEach(element => {
                     lunch += '<li>' + element + '</li>'
                 })
             }
-            lunch += '</ul>'
-            if (lunch === '<ul></ul>') {
+            if (lunch === '') {
                 lunch = '메뉴가 없습니다.'
             }
-            $('#lunch').html(lunch)
+            $('#lunch > ul').html(lunch)
         })
 
         $.get(`${baseURL}/api/meal/${ymd}/type/3/office/${data.office}/school/${data.school}/level/${data.level}`, function (data) {
             let meal = JSON.parse(data)
-            let dinner = '<ul>'
+            let dinner = ''
             if (meal.menus) {
                 meal.menus.forEach(element => {
                     dinner += '<li>' + element + '</li>'
                 })
             }
-            dinner += '</ul>'
-            if (dinner === '<ul></ul>') {
+            if (dinner === '') {
                 dinner = '메뉴가 없습니다.'
             }
-            $('#dinner').html(dinner)
+            $('#dinner > ul').html(dinner)
         })
     })
 }
+
 // setting save-btn
 $(document).on('click', '#ok', function () {
-    console.log('1')
+    console.log('save')
     let office = $('#office').val()
     let school = $('#school').val()
     let level = $('input[name=level]:checked').val()
-    let setting = [{ office: office }, { school: school }, { level: level }]
+    let setting = { office: office, school: school, level: level }
 
-    chrome.storage.local.set(setting, function () {
-        // console.log(data)
-    })
-
-    chrome.storage.local.get(keys, function (data) {
+    // setting 저장
+    chrome.storage.sync.set(setting, function () {
         chrome.runtime.getBackgroundPage(e => {
-            e.getMenu(e.getYmd(new Date()), data)
+            e.getMenu(e.getYmd(new Date()), setting)
 
             alert('저장되었습니다!')
             location.href = '../index.html'

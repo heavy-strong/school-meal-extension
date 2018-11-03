@@ -1,6 +1,7 @@
 {
-    "name": "전국 급식 보기",
-    "version": "1.2.2",
+    "name": "전국 급식",
+    "short_name": "전국 급식",
+    "version": "1.2.4",
     "description": "전국 유치원, 초, 중, 고등학교 급식 보기",
     "icons": {
         "128": "icon/icon128.png",

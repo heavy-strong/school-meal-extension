@@ -8,34 +8,45 @@
 </head>
 
 <body>
-    <p id="date" style="position:absolute; top: 5px; left: 10px; color: rgb(84, 173, 196);">date</p>
-    <a href="page/setting.html" style="position:absolute; top: 5px; right: 10px; color: rgb(84, 173, 196);">설정</a>
-    <h2 id="title">MEAL MENUS</h2>
+    <div id="index" class="wrap">
+        <div class="container">
+            <!-- header -->
+            <header>
+                <!-- <p id="date">불러오는 중...</p> -->
+                <h2 id="title">Schoool Meal Extension</h2>
+                <a href="page/setting.html" class="link">설정</a>
+            </header>
 
-    <div class="controlles">
-        <button class="btn" id="btn-prev">PREV</button>
-        <button class="btn" id="btn-today">TODAY</button>
-        <button class="btn" id="btn-next">NEXT</button>
+            <!-- controllers -->
+            <div class="controllers">
+                <button class="btn" id="btn-prev">PREV MEAL</button>
+                <button class="btn" id="btn-today">TODAY MEAL</button>
+                <button class="btn" id="btn-next">NEXT MEAL</button>
+            </div>
+
+            <!-- meal -->
+            <div class="meals">
+                <div id="breakfast" class="meal">
+                    <h3>아침</h3>
+                    <ul>불러오는 중...</ul>
+                </div>
+
+                <div id="lunch" class="meal">
+                    <h3>점심</h3>
+                    <ul>불러오는 중...</ul>
+                </div>
+
+                <div id="dinner" class="meal">
+                    <h3>저녁</h3>
+                    <ul>불러오는 중...</ul>
+                </div>
+            </div>
+            
+            <!-- script -->
+            <script src="js/jquery-3.3.1.js"></script>
+            <script src="js/script.js"></script>
+        </div>
     </div>
-
-    <div class="meals">
-        <div class="meal">
-            <h3>아침</h3>
-            <div id="breakfast">불러오는 중...</div>
-        </div>
-
-        <div class="meal">
-            <h3>점심</h3>
-            <div id="lunch">불러오는 중...</div>
-        </div>
-
-        <div class="meal">
-            <h3>저녁</h3>
-            <div id="dinner">불러오는 중...</div>
-        </div>
-    </div>
-    <script src="js/jquery-3.3.1.js"></script>
-    <script src="js/script.js"></script>
 </body>
 
 </html>
