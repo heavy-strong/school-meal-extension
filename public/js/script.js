@@ -27,13 +27,13 @@ $(function () {
     // 설정 불러오기
     chrome.storage.sync.get(keys, function (data) {
         // 설정이 있을 떄만 설정에 저장
-        if(data.level) {
+        if (data.level) {
             $('.school-name').text(data.name)
             // $('#office').val(data.office)
             // $('#school').val(data.school)
             // $(`#level-${data.level}`).attr('checked', true)
         } else {
-            
+
         }
     })
 })
@@ -83,7 +83,7 @@ $('#btn-prev').click(function () {
 })
 
 // 검색 버튼
-$("#btn-search").click(function() {
+$("#btn-search").click(function () {
     updateList()
 })
 
@@ -98,15 +98,18 @@ function updateList() {
     $.get(`${baseURL}/api/school/${search}`, function (data) {
         let json = JSON.parse(data)
 
-        // 리스트 초기화
-        $('#school-list').html('')
-        json.schools.forEach(element => {
-            // console.log(element.name)
-            let list = "<li class='school-list' data-code='" + element.code + "' data-office='" + element.office + "' data-level='" + element.level + "'><h3>" + element.name + "</h3>"
-            list += "<h5>" + element.address + "</h5></li>"
-            $('#school-list').append(list)
-            // console.log(list)
-        })
+        // 검색결과가 없을 경우
+        if (json.schools == undefined || json.schools.length == 0) {
+            $('#school-list').html('<span style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">검색결과가 없습니다.</span>')
+        } else {
+            // 리스트 초기화
+            $('#school-list').html('')
+            json.schools.forEach(element => {
+                let list = "<li class='school-list' data-code='" + element.code + "' data-office='" + element.office + "' data-level='" + element.level + "'><h3>" + element.name + "</h3>"
+                list += "<h5>" + element.address + "</h5></li>"
+                $('#school-list').append(list)
+            })
+        }
     })
 }
 

@@ -1,20 +1,22 @@
 # School-meal-extension
-```angular2html
-전국 유치원, 초, 중, 고등학교 급식을 볼 수 있는 웨일(크롬) 확장 프로그램입니다.
+```
+전국 초, 중, 고등학교 급식을 볼 수 있는 웨일(크롬) 확장 프로그램입니다.
 ```
 
 # API
 ### Meal API - 전국 급식 API
 https://github.com/Jrady721/School-meal-api
+### School API - 전국 학교 API
+https://github.com/Jrady721/School-search-api
 
 # version
 ### 1.0
-```angular2html
+```
 DGSW 급식
 대구소프트웨어 고등학교 전용 급식 extension
 ```
 ### 1.1.0
-```angular2html
+```
 변경사항
 > 초기 로딩 속도 향상
 
@@ -24,7 +26,7 @@ DGSW 급식
 ```
 
 ### 1.2.0
-```angular2html
+```
 변경사항
 > DGSW 급식에서 '전국 급식'으로 변경
 추가사항
