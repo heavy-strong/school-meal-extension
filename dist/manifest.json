@@ -1,0 +1,21 @@
+{
+  "name": "전국 급식",
+  "short_name": "전국 급식",
+  "version": "1.2.6",
+  "description": "전국 초, 중, 고등학교 급식 보기",
+  "icons": {
+    "16": "icon/icon16.png",
+    "48": "icon/icon48.png",
+    "128": "icon/icon128.png"
+  },
+  "permissions": ["storage", "notifications", "http://jrady721.cafe24.com/"],
+  "browser_action": {
+    "default_popup": "index.html"
+  },
+  "background": {
+    "scripts": ["js/background.js"],
+    "persistent": false
+  },
+  "web_accessible_resources": ["icon/icon48.png"],
+  "manifest_version": 2
+}
