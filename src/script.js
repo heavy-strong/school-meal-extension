@@ -1,6 +1,6 @@
 import $ from "jquery";
 
-import getMenu from "./getMenu";
+import { getMenu } from "./getMenu";
 import getYmd from "./getYmd";
 
 // default
@@ -141,10 +141,10 @@ function loading() {
 
 // 급식메뉴 불러와서 데이터 삽입
 function getMenuFront(ymd, callback) {
-    chrome.storage.sync.get(keys, function(setting) {
-        getMenu(ymd, setting, (time, data) => {
-            $(`#${time} > ul`).html(data);
-        });
+    getMenu(ymd, (time, data) => {
+        if (!data) {
+            $(`#${time} > ul`).html("오류가 발생했습니다.");
+        } else $(`#${time} > ul`).html(data);
     });
 }
 

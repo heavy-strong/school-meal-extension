@@ -92,6 +92,59 @@
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getNextMenu", function() { return getNextMenu; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getMenu", function() { return getMenu; });
+const times = ["breakfast", "lunch", "dinner"];
+const baseURL = "http://jrady721.cafe24.com";
+
+function getNextMenu(callback) {
+    chrome.storage.sync.get(async result => {
+        const data = await fetch(`${baseURL}/api/nextmeal/${result.office}
+                                /school/${result.school}/level/${result.level}`);
+        const meal = await data.json();
+        callback(meal);
+    });
+}
+
+// 급식 메뉴 가져오기
+function getMenu(ymd, callback) {
+    console.log(ymd);
+    chrome.storage.sync.get(result => {
+        if (result.date === ymd && result.breakfast) {
+            times.forEach(t => {
+                callback(t, result[t]);
+            });
+        } else {
+            times.forEach(async (t, idx) => {
+                try {
+                    const data = await fetch(`${baseURL}/api/meal/${ymd}/type/${idx + 1}/office/${result.office}
+                                            /school/${result.school}/level/${result.level}`);
+                    const meal = await data.json();
+                    let mealData = "";
+                    if (meal.menus) {
+                        meal.menus.forEach(element => {
+                            mealData += `<li>${element}</li>`;
+                        });
+                    }
+                    if (mealData === "") {
+                        mealData = "메뉴가 없습니다.";
+                    }
+                    callback(t, mealData);
+                } catch (e) {
+                    callback(t, null);
+                }
+            });
+        }
+    });
+}
+
+
+/***/ }),
+/* 3 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return getYmd; });
 // yyyy.mm.dd 포맷으로 변경
 function getYmd(date) {
@@ -111,50 +164,6 @@ function getYmd(date) {
 
 
 /***/ }),
-/* 3 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return getMenu; });
-const times = ["breakfast", "lunch", "dinner"];
-const baseURL = "http://jrady721.cafe24.com";
-
-// 급식 메뉴 가져오기
-function getMenu(ymd, setting, callback) {
-    console.log(ymd);
-    chrome.storage.sync.get(["date", "breakfast", "lunch", "dinner"], result => {
-        if (result.date === ymd) {
-            times.forEach(t => {
-                callback(t, result[t]);
-            });
-        } else {
-            times.forEach((t, idx) => {
-                fetch(
-                    `${baseURL}/api/meal/${ymd}/type/${idx + 1}/office/${setting.office}/school/${
-                        setting.school
-                    }/level/${setting.level}`
-                ).then(data => {
-                    data.json().then(meal => {
-                        let mealData = "";
-                        if (meal.menus) {
-                            meal.menus.forEach(element => {
-                                mealData += `<li>${element}</li>`;
-                            });
-                        }
-                        if (mealData === "") {
-                            mealData = "메뉴가 없습니다.";
-                        }
-                        callback(t, mealData);
-                    });
-                });
-            });
-        }
-    });
-}
-
-
-/***/ }),
 /* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -169,8 +178,8 @@ module.exports = __webpack_require__(5);
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(6);
 /* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(jquery__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _getMenu__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(3);
-/* harmony import */ var _getYmd__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(2);
+/* harmony import */ var _getMenu__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(2);
+/* harmony import */ var _getYmd__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(3);
 
 
 
@@ -314,10 +323,10 @@ function loading() {
 
 // 급식메뉴 불러와서 데이터 삽입
 function getMenuFront(ymd, callback) {
-    chrome.storage.sync.get(keys, function(setting) {
-        Object(_getMenu__WEBPACK_IMPORTED_MODULE_1__["default"])(ymd, setting, (time, data) => {
-            jquery__WEBPACK_IMPORTED_MODULE_0___default()(`#${time} > ul`).html(data);
-        });
+    Object(_getMenu__WEBPACK_IMPORTED_MODULE_1__["getMenu"])(ymd, (time, data) => {
+        if (!data) {
+            jquery__WEBPACK_IMPORTED_MODULE_0___default()(`#${time} > ul`).html("오류가 발생했습니다.");
+        } else jquery__WEBPACK_IMPORTED_MODULE_0___default()(`#${time} > ul`).html(data);
     });
 }
 
