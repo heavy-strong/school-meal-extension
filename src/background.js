@@ -21,12 +21,27 @@ function getCurrentHM() {
 
 function getNextMeal() {
     chrome.storage.sync.get(keys, setting => {});
-    fetch(`http://jrady721.cafe24.com/api/nextmeal/office/dge.go.kr/school/D100000282/level/4`).then(response => {
-        response.json().then(value => {
-            getNextMenu(result => {
-                console.log(result);
-            });
+    // fetch(`http://jrady721.cafe24.com/api/nextmeal/${setting.}/school/D100000282/level/4`).then(response => {
+    //     response.json().then(value => {
+    //         getNextMenu(result => {
+    //             console.log(result);
+    //         });
+    //     });
+    // });
+    const mealTime = {
+        breakfast: "다음날 아침",
+        lunch: "점심",
+        dinner: "저녁"
+    };
+    getNextMenu(data => {
+        chrome.notifications.clear(data.type);
+        chrome.notifications.create(data.type, {
+            title: mealTime[data.type],
+            type: "basic",
+            iconUrl: "icon/icon48.png",
+            message: ""
         });
+        console.log(data);
     });
     // 하루 타임아웃
     setTimeout(getNextMeal, 24 * 60 * 60 * 1000);

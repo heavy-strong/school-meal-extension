@@ -3,8 +3,9 @@ const baseURL = "http://jrady721.cafe24.com";
 
 export function getNextMenu(callback) {
     chrome.storage.sync.get(async result => {
-        const data = await fetch(`${baseURL}/api/nextmeal/${result.office}
-                                /school/${result.school}/level/${result.level}`);
+        const data = await fetch(
+            `${baseURL}/api/nextmeal/${result.office}/school/${result.school}/level/${result.level}`
+        );
         const meal = await data.json();
         callback(meal);
     });
@@ -21,8 +22,11 @@ export function getMenu(ymd, callback) {
         } else {
             times.forEach(async (t, idx) => {
                 try {
-                    const data = await fetch(`${baseURL}/api/meal/${ymd}/type/${idx + 1}/office/${result.office}
-                                            /school/${result.school}/level/${result.level}`);
+                    const data = await fetch(
+                        `${baseURL}/api/meal/${ymd}/type/${idx + 1}/office/${result.office}/school/${
+                            result.school
+                        }/level/${result.level}`
+                    );
                     const meal = await data.json();
                     let mealData = "";
                     if (meal.menus) {
