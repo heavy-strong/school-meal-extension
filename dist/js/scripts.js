@@ -221,7 +221,6 @@ jquery__WEBPACK_IMPORTED_MODULE_0___default()(function() {
             // $('#office').val(data.office)
             // $('#school').val(data.school)
             // $(`#level-${data.level}`).attr('checked', true)
-        } else {
         }
     });
 });
@@ -239,9 +238,7 @@ jquery__WEBPACK_IMPORTED_MODULE_0___default()("#btn-today").on("mouseover", func
     jquery__WEBPACK_IMPORTED_MODULE_0___default()("#btn-today").text("TODAY MEAL");
 });
 jquery__WEBPACK_IMPORTED_MODULE_0___default()("#btn-today").on("mouseleave", function() {
-    chrome.runtime.getBackgroundPage(e => {
-        jquery__WEBPACK_IMPORTED_MODULE_0___default()("#btn-today").text(Object(_getYmd__WEBPACK_IMPORTED_MODULE_2__["default"])(date));
-    });
+    jquery__WEBPACK_IMPORTED_MODULE_0___default()("#btn-today").text(Object(_getYmd__WEBPACK_IMPORTED_MODULE_2__["default"])(date));
 });
 
 // 내일
@@ -331,6 +328,7 @@ function getMenuFront(ymd, callback) {
         if (!data) {
             jquery__WEBPACK_IMPORTED_MODULE_0___default()(`#${time} > ul`).html("오류가 발생했습니다.");
         } else jquery__WEBPACK_IMPORTED_MODULE_0___default()(`#${time} > ul`).html(data);
+        callback && callback();
     });
 }
 

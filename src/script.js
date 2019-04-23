@@ -35,7 +35,6 @@ $(function() {
             // $('#office').val(data.office)
             // $('#school').val(data.school)
             // $(`#level-${data.level}`).attr('checked', true)
-        } else {
         }
     });
 });
@@ -53,9 +52,7 @@ $("#btn-today").on("mouseover", function() {
     $("#btn-today").text("TODAY MEAL");
 });
 $("#btn-today").on("mouseleave", function() {
-    chrome.runtime.getBackgroundPage(e => {
-        $("#btn-today").text(getYmd(date));
-    });
+    $("#btn-today").text(getYmd(date));
 });
 
 // 내일
@@ -145,6 +142,7 @@ function getMenuFront(ymd, callback) {
         if (!data) {
             $(`#${time} > ul`).html("오류가 발생했습니다.");
         } else $(`#${time} > ul`).html(data);
+        callback && callback();
     });
 }
 

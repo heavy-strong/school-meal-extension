@@ -120,29 +120,42 @@ function getCurrentHM() {
     return now.getHours() * 60 + now.getMinutes();
 }
 
+/**
+ * 다음 급식 알림
+ */
 function getNextMeal() {
-    chrome.storage.sync.get(keys, setting => {});
-    // fetch(`http://jrady721.cafe24.com/api/nextmeal/${setting.}/school/D100000282/level/4`).then(response => {
-    //     response.json().then(value => {
-    //         getNextMenu(result => {
-    //             console.log(result);
-    //         });
-    //     });
-    // });
+    // chrome.storage.sync.get(keys, setting => {});
+    // // fetch(`http://jrady721.cafe24.com/api/nextmeal/${setting.}/school/D100000282/level/4`).then(response => {
+    // //     response.json().then(value => {
+    // //         getNextMenu(result => {
+    // //             console.log(result);
+    // //         });
+    // //     });
+    // // });
     const mealTime = {
         breakfast: "다음날 아침",
         lunch: "점심",
         dinner: "저녁"
     };
     Object(_getMenu__WEBPACK_IMPORTED_MODULE_0__["getNextMenu"])(data => {
-        chrome.notifications.clear(data.type);
-        chrome.notifications.create(data.type, {
-            title: mealTime[data.type],
-            type: "basic",
-            iconUrl: "icon/icon48.png",
-            message: ""
+        chrome.notifications.clear(data.type, () => {
+            let menuStr = "";
+            data.menus.forEach((menu, index) => {
+                if (index > 0 && index % 2 === 0) {
+                    menuStr += "\n";
+                } else {
+                    menuStr += " ";
+                }
+                menuStr += "· " + menu;
+            });
+            chrome.notifications.create(data.type, {
+                title: mealTime[data.type],
+                type: "basic",
+                iconUrl: "icon/icon48.png",
+                message: menuStr
+            });
+            console.log(data);
         });
-        console.log(data);
     });
     // 하루 타임아웃
     setTimeout(getNextMeal, 24 * 60 * 60 * 1000);
@@ -155,7 +168,7 @@ function alarm(times) {
         console.log("wait " + diff * 60 * 1000);
         setTimeout(getNextMeal, diff * 60 * 1000);
     });
-    setTimeout(getNextMeal, 5000);
+    // setTimeout(getNextMeal, 500);
 }
 
 // 처음 설치 후 실행
