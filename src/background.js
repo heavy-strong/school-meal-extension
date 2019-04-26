@@ -1,3 +1,4 @@
+// 모듈 불러오기
 import {getMenu, getNextMenu} from "./getMenu";
 import getYmd from "./getYmd";
 
