@@ -124,14 +124,6 @@ function getCurrentHM() {
  * 다음 급식 알림
  */
 function getNextMeal() {
-    // chrome.storage.sync.get(keys, setting => {});
-    // // fetch(`http://jrady721.cafe24.com/api/nextmeal/${setting.}/school/D100000282/level/4`).then(response => {
-    // //     response.json().then(value => {
-    // //         getNextMenu(result => {
-    // //             console.log(result);
-    // //         });
-    // //     });
-    // // });
     const mealTime = {
         breakfast: "다음날 아침",
         lunch: "점심",
@@ -172,10 +164,11 @@ function alarm(times) {
 }
 
 // 처음 설치 후 실행
-chrome.runtime.onInstalled.addListener(function() {});
+chrome.runtime.onInstalled.addListener(function () {
+});
 
 // 백그라운드
-chrome.storage.sync.get(keys, function(setting) {
+chrome.storage.sync.get(keys, function (setting) {
     // 설정이 존재하지 않으면 기본설정으로 설정하고 로드함
     if (!setting.level) {
         let option = {
@@ -186,14 +179,14 @@ chrome.storage.sync.get(keys, function(setting) {
             alarmTimes: alarmTimes
         };
         // 설정
-        chrome.storage.sync.set(option, function() {
+        chrome.storage.sync.set(option, function () {
             // 모두 세팅을 마쳤을 때
             Object(_getMenu__WEBPACK_IMPORTED_MODULE_0__["getMenu"])(Object(_getYmd__WEBPACK_IMPORTED_MODULE_1__["default"])(new Date()), (time, data) => {
                 chrome.storage.sync.set(
                     {
                         [time]: data
                     },
-                    function() {
+                    function () {
                         console.log("set sync data");
                     }
                 );
@@ -208,15 +201,11 @@ chrome.storage.sync.get(keys, function(setting) {
     if (setting.level) {
         // get Menu
         Object(_getMenu__WEBPACK_IMPORTED_MODULE_0__["getMenu"])(Object(_getYmd__WEBPACK_IMPORTED_MODULE_1__["default"])(new Date()), (time, data) => {
-            chrome.storage.sync.set(
-                {
-                    [time]: data
-                },
-                function() {
-                    console.log("set sync data");
-                }
-            );
+            chrome.storage.sync.set({[time]: data}, function () {
+                console.log("set sync data");
+            });
         });
+
         alarm(setting.alarmTimes);
     }
 });
@@ -244,22 +233,25 @@ function getNextMenu(callback) {
 }
 
 // 급식 메뉴 가져오기
-function getMenu(ymd, callback) {
+function getMenu(ymd, callback, force) {
     console.log(ymd);
-    chrome.storage.sync.get(result => {
-        if (result.date === ymd && result.breakfast) {
+
+    chrome.storage.sync.get(data => {
+        console.log(data);
+        if (!force && data.date === ymd && data.breakfast) {
             times.forEach(t => {
-                callback(t, result[t]);
+                callback(t, data[t]);
             });
         } else {
+            console.log("load force");
             times.forEach(async (t, idx) => {
                 try {
-                    const data = await fetch(
-                        `${baseURL}/api/meal/${ymd}/type/${idx + 1}/office/${result.office}/school/${
-                            result.school
-                        }/level/${result.level}`
+                    const meals = await fetch(
+                        `${baseURL}/api/meal/${ymd}/type/${idx + 1}/office/${data.office}/school/${data.school}/level/${data.level}`
                     );
-                    const meal = await data.json();
+                    const meal = await meals.json();
+
+                    // meal data 초기화
                     let mealData = "";
                     if (meal.menus) {
                         meal.menus.forEach(element => {
@@ -274,6 +266,7 @@ function getMenu(ymd, callback) {
                     callback(t, null);
                 }
             });
+
         }
     });
 }
@@ -292,12 +285,9 @@ function getYmd(date) {
     let m = (date.getMonth() + 1).toString();
     let d = date.getDate().toString();
 
-    if (d.length === 1) {
-        d = "0" + d;
-    }
-    if (m.length === 1) {
-        m = "0" + m;
-    }
+    if (d.length === 1) d = "0" + d;
+
+    if (m.length === 1) m = "0" + m;
 
     return y + "." + m + "." + d;
 }

@@ -1,4 +1,4 @@
-import { getMenu, getNextMenu } from "./getMenu";
+import {getMenu, getNextMenu} from "./getMenu";
 import getYmd from "./getYmd";
 
 const keys = ["office", "school", "level", "alarmTimes"];
@@ -23,14 +23,6 @@ function getCurrentHM() {
  * 다음 급식 알림
  */
 function getNextMeal() {
-    // chrome.storage.sync.get(keys, setting => {});
-    // // fetch(`http://jrady721.cafe24.com/api/nextmeal/${setting.}/school/D100000282/level/4`).then(response => {
-    // //     response.json().then(value => {
-    // //         getNextMenu(result => {
-    // //             console.log(result);
-    // //         });
-    // //     });
-    // // });
     const mealTime = {
         breakfast: "다음날 아침",
         lunch: "점심",
@@ -71,10 +63,11 @@ function alarm(times) {
 }
 
 // 처음 설치 후 실행
-chrome.runtime.onInstalled.addListener(function() {});
+chrome.runtime.onInstalled.addListener(function () {
+});
 
 // 백그라운드
-chrome.storage.sync.get(keys, function(setting) {
+chrome.storage.sync.get(keys, function (setting) {
     // 설정이 존재하지 않으면 기본설정으로 설정하고 로드함
     if (!setting.level) {
         let option = {
@@ -85,14 +78,14 @@ chrome.storage.sync.get(keys, function(setting) {
             alarmTimes: alarmTimes
         };
         // 설정
-        chrome.storage.sync.set(option, function() {
+        chrome.storage.sync.set(option, function () {
             // 모두 세팅을 마쳤을 때
             getMenu(getYmd(new Date()), (time, data) => {
                 chrome.storage.sync.set(
                     {
                         [time]: data
                     },
-                    function() {
+                    function () {
                         console.log("set sync data");
                     }
                 );
@@ -107,15 +100,11 @@ chrome.storage.sync.get(keys, function(setting) {
     if (setting.level) {
         // get Menu
         getMenu(getYmd(new Date()), (time, data) => {
-            chrome.storage.sync.set(
-                {
-                    [time]: data
-                },
-                function() {
-                    console.log("set sync data");
-                }
-            );
+            chrome.storage.sync.set({[time]: data}, function () {
+                console.log("set sync data");
+            });
         });
+
         alarm(setting.alarmTimes);
     }
 });

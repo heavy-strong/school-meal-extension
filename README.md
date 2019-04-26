@@ -1,15 +1,16 @@
-# School-meal-extension
+# school-meal-extension
+설명
 ```
 전국 초, 중, 고등학교 급식을 볼 수 있는 웨일(크롬) 확장 프로그램입니다.
 ```
 
 # API
-### Meal API - 전국 급식 API
-https://github.com/Jrady721/School-meal-api
-### School API - 전국 학교 API
-https://github.com/Jrady721/School-search-api
+### school-meal-api - 전국 급식 API
+https://github.com/jrady721/school-meal-api
+### school-search-api - 전국 학교 API
+https://github.com/jrady721/school-search-api
 
-# version
+# Version
 ### 1.0
 ```
 DGSW 급식

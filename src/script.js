@@ -1,6 +1,6 @@
 import $ from "jquery";
 
-import { getMenu } from "./getMenu";
+import {getMenu} from "./getMenu";
 import getYmd from "./getYmd";
 
 // default
@@ -12,9 +12,9 @@ let office, school, level, name;
 // 오늘
 let date = new Date();
 
-$(function() {
+$(function () {
     // 설정된 오늘의 급식 불러오기
-    chrome.storage.sync.get(["breakfast", "lunch", "dinner", "date"], function(result) {
+    chrome.storage.sync.get(["breakfast", "lunch", "dinner", "date"], function (result) {
         // 만약 현재 날짜의 지금날짜가 동일하다면 로컬에서 불러오고 아니면 다시 로드한다.
         if (result.date === getYmd(new Date())) {
             $("#btn-today").text(result.date);
@@ -28,35 +28,34 @@ $(function() {
     });
 
     // 설정 불러오기
-    chrome.storage.sync.get(keys, function(data) {
+    chrome.storage.sync.get(keys, function (data) {
         // 설정이 있을 떄만 설정에 저장
         if (data.level) {
-            $(".school-name").text(data.name);
-            // $('#office').val(data.office)
-            // $('#school').val(data.school)
-            // $(`#level-${data.level}`).attr('checked', true)
+            office = data.office;
+            school = data.school;
+            level = data.level;
+            // $(".school-name").text(data.name);
         }
     });
 });
 
-// 오늘
-$("#btn-today").click(function() {
+// Today Button
+$("#btn-today").click(function () {
     loading();
 
     date = new Date();
     $("#btn-today").html(getYmd(date));
     getMenuFront(getYmd(date));
 });
-
-$("#btn-today").on("mouseover", function() {
+$("#btn-today").on("mouseover", function () {
     $("#btn-today").text("TODAY MEAL");
 });
-$("#btn-today").on("mouseleave", function() {
+$("#btn-today").on("mouseleave", function () {
     $("#btn-today").text(getYmd(date));
 });
 
-// 내일
-$("#btn-next").click(function() {
+// Next Button
+$("#btn-next").click(function () {
     loading();
 
     date.setDate(date.getDate() + 1);
@@ -64,8 +63,8 @@ $("#btn-next").click(function() {
     getMenuFront(getYmd(date));
 });
 
-// 이전날
-$("#btn-prev").click(function() {
+// Prev Button
+$("#btn-prev").click(function () {
     loading();
 
     date.setDate(date.getDate() - 1);
@@ -73,20 +72,20 @@ $("#btn-prev").click(function() {
     getMenuFront(getYmd(date));
 });
 
-// 검색 버튼
-$("#btn-search").click(function() {
+// 검색
+$("#btn-search").click(function () {
     updateList();
 });
-
-$(document).on("keydown", "#school", function(e) {
-    if (e.key == "Enter") {
+$(document).on("keydown", "#school", function (e) {
+    if (e.key === "Enter") {
         updateList();
     }
 });
 
+// updateList
 function updateList() {
     let search = $("#school").val();
-    $.get(`${baseURL}/api/school/${search}`, function(data) {
+    $.get(`${baseURL}/api/school/${search}`, function (data) {
         let json = JSON.parse(data);
 
         // 검색결과가 없을 경우
@@ -98,17 +97,13 @@ function updateList() {
             // 리스트 초기화
             $("#school-list").html("");
             json.schools.forEach(element => {
-                let list =
-                    "<li class='school-list' data-code='" +
-                    element.code +
-                    "' data-office='" +
-                    element.office +
-                    "' data-level='" +
-                    element.level +
-                    "'><h3>" +
-                    element.name +
-                    "</h3>";
-                list += "<h5>" + element.address + "</h5></li>";
+                // 검색한 것 중, 사용자가 설장한 학교랑 일치하는 학교가 있을경우 active
+                let active = element.code === school ? ' active' : '';
+
+                let list = `<li class='school-list${active}' data-code='${element.code}' data-office='${element.office}' data-level='${element.level}'><h3>${element.name}</h3>`;
+                list += `<h5>${element.address}</h5></li>`;
+
+                // 학교 리스트에 추가
                 $("#school-list").append(list);
             });
         }
@@ -116,7 +111,7 @@ function updateList() {
 }
 
 // 학교 선택
-$(document).on("click", ".school-list", function() {
+$(document).on("click", ".school-list", function () {
     office = $(this).attr("data-office");
     school = $(this).attr("data-code");
     level = $(this).attr("data-level");
@@ -124,9 +119,11 @@ $(document).on("click", ".school-list", function() {
         .find("h3")
         .text();
 
-    $(".school-name").text(name);
+    // $(".school-name").text(name);
 
-    alert(name + " 선택 완료");
+    $('.active').removeClass('active');
+    $(this).addClass('active');
+    // alert(name + " 선택 완료");
 });
 
 // loading...
@@ -138,39 +135,51 @@ function loading() {
 
 // 급식메뉴 불러와서 데이터 삽입
 function getMenuFront(ymd, callback) {
+
+    // 메뉴 가져오기
     getMenu(ymd, (time, data) => {
+        // 데이터가 없을 경우
         if (!data) {
             $(`#${time} > ul`).html("오류가 발생했습니다.");
-        } else $(`#${time} > ul`).html(data);
+        } else {
+            $(`#${time} > ul`).html(data);
+        }
+
+        // 여기가 원래 콜백위치
         callback && callback();
     });
 }
 
 // setting save-btn
-$(document).on("click", "#ok", function() {
+$(document).on("click", "#ok", function () {
     console.log("save");
-    // let office = $('#office').val()
-    // let school = $('#school').val()
-    // let level = $('input[name=level]:checked').val()
-
-    let setting = { office: office, school: school, level: level, name: name };
+    // 세팅 데이터 가져오기
+    let setting = {office: office, school: school, level: level, name: name};
 
     // setting 저장
-    chrome.storage.sync.set(setting, function() {
-        getMenuFront(getYmd(new Date()), () => {
-            alert("저장되었습니다!");
-            location.href = "../index.html";
-        });
+    chrome.storage.sync.set(setting, function () {
+        let chk = 0;
+        getMenu(getYmd(new Date()), (time, data) => {
+            console.log(time, data);
+            if (!data) {
+                alert('설정 저장에 오류가 있습니다.');
+            } else {
+                chrome.storage.sync.set({[time]: data});
+
+                chk++;
+                // 모든 데이터를 불러왔을 때 이동한다.
+                if (chk === 2) {
+                    location.replace('/index.html');
+                    alert('저장완료');
+                }
+            }
+        }, true);
+
+
     });
 });
 
 // 취소
-$(document).on("click", "#cancel", function() {
-    location.href = "../index.html";
+$(document).on("click", "#cancel", function () {
+    location.replace("/index.html");
 });
-
-// 학교 검색
-// $(document).on('click', '#search', function () {
-//     let url = 'https://www.meatwatch.go.kr/biz/bm/sel/schoolListPopup.do'
-//     window.open(url, '학교코드 검색', 'height=400, width=500')
-// })

@@ -108,22 +108,25 @@ function getNextMenu(callback) {
 }
 
 // 급식 메뉴 가져오기
-function getMenu(ymd, callback) {
+function getMenu(ymd, callback, force) {
     console.log(ymd);
-    chrome.storage.sync.get(result => {
-        if (result.date === ymd && result.breakfast) {
+
+    chrome.storage.sync.get(data => {
+        console.log(data);
+        if (!force && data.date === ymd && data.breakfast) {
             times.forEach(t => {
-                callback(t, result[t]);
+                callback(t, data[t]);
             });
         } else {
+            console.log("load force");
             times.forEach(async (t, idx) => {
                 try {
-                    const data = await fetch(
-                        `${baseURL}/api/meal/${ymd}/type/${idx + 1}/office/${result.office}/school/${
-                            result.school
-                        }/level/${result.level}`
+                    const meals = await fetch(
+                        `${baseURL}/api/meal/${ymd}/type/${idx + 1}/office/${data.office}/school/${data.school}/level/${data.level}`
                     );
-                    const meal = await data.json();
+                    const meal = await meals.json();
+
+                    // meal data 초기화
                     let mealData = "";
                     if (meal.menus) {
                         meal.menus.forEach(element => {
@@ -138,6 +141,7 @@ function getMenu(ymd, callback) {
                     callback(t, null);
                 }
             });
+
         }
     });
 }
@@ -156,12 +160,9 @@ function getYmd(date) {
     let m = (date.getMonth() + 1).toString();
     let d = date.getDate().toString();
 
-    if (d.length === 1) {
-        d = "0" + d;
-    }
-    if (m.length === 1) {
-        m = "0" + m;
-    }
+    if (d.length === 1) d = "0" + d;
+
+    if (m.length === 1) m = "0" + m;
 
     return y + "." + m + "." + d;
 }
@@ -198,9 +199,9 @@ let office, school, level, name;
 // 오늘
 let date = new Date();
 
-jquery__WEBPACK_IMPORTED_MODULE_0___default()(function() {
+jquery__WEBPACK_IMPORTED_MODULE_0___default()(function () {
     // 설정된 오늘의 급식 불러오기
-    chrome.storage.sync.get(["breakfast", "lunch", "dinner", "date"], function(result) {
+    chrome.storage.sync.get(["breakfast", "lunch", "dinner", "date"], function (result) {
         // 만약 현재 날짜의 지금날짜가 동일하다면 로컬에서 불러오고 아니면 다시 로드한다.
         if (result.date === Object(_getYmd__WEBPACK_IMPORTED_MODULE_2__["default"])(new Date())) {
             jquery__WEBPACK_IMPORTED_MODULE_0___default()("#btn-today").text(result.date);
@@ -214,35 +215,34 @@ jquery__WEBPACK_IMPORTED_MODULE_0___default()(function() {
     });
 
     // 설정 불러오기
-    chrome.storage.sync.get(keys, function(data) {
+    chrome.storage.sync.get(keys, function (data) {
         // 설정이 있을 떄만 설정에 저장
         if (data.level) {
-            jquery__WEBPACK_IMPORTED_MODULE_0___default()(".school-name").text(data.name);
-            // $('#office').val(data.office)
-            // $('#school').val(data.school)
-            // $(`#level-${data.level}`).attr('checked', true)
+            office = data.office;
+            school = data.school;
+            level = data.level;
+            // $(".school-name").text(data.name);
         }
     });
 });
 
-// 오늘
-jquery__WEBPACK_IMPORTED_MODULE_0___default()("#btn-today").click(function() {
+// Today Button
+jquery__WEBPACK_IMPORTED_MODULE_0___default()("#btn-today").click(function () {
     loading();
 
     date = new Date();
     jquery__WEBPACK_IMPORTED_MODULE_0___default()("#btn-today").html(Object(_getYmd__WEBPACK_IMPORTED_MODULE_2__["default"])(date));
     getMenuFront(Object(_getYmd__WEBPACK_IMPORTED_MODULE_2__["default"])(date));
 });
-
-jquery__WEBPACK_IMPORTED_MODULE_0___default()("#btn-today").on("mouseover", function() {
+jquery__WEBPACK_IMPORTED_MODULE_0___default()("#btn-today").on("mouseover", function () {
     jquery__WEBPACK_IMPORTED_MODULE_0___default()("#btn-today").text("TODAY MEAL");
 });
-jquery__WEBPACK_IMPORTED_MODULE_0___default()("#btn-today").on("mouseleave", function() {
+jquery__WEBPACK_IMPORTED_MODULE_0___default()("#btn-today").on("mouseleave", function () {
     jquery__WEBPACK_IMPORTED_MODULE_0___default()("#btn-today").text(Object(_getYmd__WEBPACK_IMPORTED_MODULE_2__["default"])(date));
 });
 
-// 내일
-jquery__WEBPACK_IMPORTED_MODULE_0___default()("#btn-next").click(function() {
+// Next Button
+jquery__WEBPACK_IMPORTED_MODULE_0___default()("#btn-next").click(function () {
     loading();
 
     date.setDate(date.getDate() + 1);
@@ -250,8 +250,8 @@ jquery__WEBPACK_IMPORTED_MODULE_0___default()("#btn-next").click(function() {
     getMenuFront(Object(_getYmd__WEBPACK_IMPORTED_MODULE_2__["default"])(date));
 });
 
-// 이전날
-jquery__WEBPACK_IMPORTED_MODULE_0___default()("#btn-prev").click(function() {
+// Prev Button
+jquery__WEBPACK_IMPORTED_MODULE_0___default()("#btn-prev").click(function () {
     loading();
 
     date.setDate(date.getDate() - 1);
@@ -259,20 +259,20 @@ jquery__WEBPACK_IMPORTED_MODULE_0___default()("#btn-prev").click(function() {
     getMenuFront(Object(_getYmd__WEBPACK_IMPORTED_MODULE_2__["default"])(date));
 });
 
-// 검색 버튼
-jquery__WEBPACK_IMPORTED_MODULE_0___default()("#btn-search").click(function() {
+// 검색
+jquery__WEBPACK_IMPORTED_MODULE_0___default()("#btn-search").click(function () {
     updateList();
 });
-
-jquery__WEBPACK_IMPORTED_MODULE_0___default()(document).on("keydown", "#school", function(e) {
-    if (e.key == "Enter") {
+jquery__WEBPACK_IMPORTED_MODULE_0___default()(document).on("keydown", "#school", function (e) {
+    if (e.key === "Enter") {
         updateList();
     }
 });
 
+// updateList
 function updateList() {
     let search = jquery__WEBPACK_IMPORTED_MODULE_0___default()("#school").val();
-    jquery__WEBPACK_IMPORTED_MODULE_0___default.a.get(`${baseURL}/api/school/${search}`, function(data) {
+    jquery__WEBPACK_IMPORTED_MODULE_0___default.a.get(`${baseURL}/api/school/${search}`, function (data) {
         let json = JSON.parse(data);
 
         // 검색결과가 없을 경우
@@ -284,17 +284,13 @@ function updateList() {
             // 리스트 초기화
             jquery__WEBPACK_IMPORTED_MODULE_0___default()("#school-list").html("");
             json.schools.forEach(element => {
-                let list =
-                    "<li class='school-list' data-code='" +
-                    element.code +
-                    "' data-office='" +
-                    element.office +
-                    "' data-level='" +
-                    element.level +
-                    "'><h3>" +
-                    element.name +
-                    "</h3>";
-                list += "<h5>" + element.address + "</h5></li>";
+                // 검색한 것 중, 사용자가 설장한 학교랑 일치하는 학교가 있을경우 active
+                let active = element.code === school ? ' active' : '';
+
+                let list = `<li class='school-list${active}' data-code='${element.code}' data-office='${element.office}' data-level='${element.level}'><h3>${element.name}</h3>`;
+                list += `<h5>${element.address}</h5></li>`;
+
+                // 학교 리스트에 추가
                 jquery__WEBPACK_IMPORTED_MODULE_0___default()("#school-list").append(list);
             });
         }
@@ -302,7 +298,7 @@ function updateList() {
 }
 
 // 학교 선택
-jquery__WEBPACK_IMPORTED_MODULE_0___default()(document).on("click", ".school-list", function() {
+jquery__WEBPACK_IMPORTED_MODULE_0___default()(document).on("click", ".school-list", function () {
     office = jquery__WEBPACK_IMPORTED_MODULE_0___default()(this).attr("data-office");
     school = jquery__WEBPACK_IMPORTED_MODULE_0___default()(this).attr("data-code");
     level = jquery__WEBPACK_IMPORTED_MODULE_0___default()(this).attr("data-level");
@@ -310,9 +306,11 @@ jquery__WEBPACK_IMPORTED_MODULE_0___default()(document).on("click", ".school-lis
         .find("h3")
         .text();
 
-    jquery__WEBPACK_IMPORTED_MODULE_0___default()(".school-name").text(name);
+    // $(".school-name").text(name);
 
-    alert(name + " 선택 완료");
+    jquery__WEBPACK_IMPORTED_MODULE_0___default()('.active').removeClass('active');
+    jquery__WEBPACK_IMPORTED_MODULE_0___default()(this).addClass('active');
+    // alert(name + " 선택 완료");
 });
 
 // loading...
@@ -324,43 +322,54 @@ function loading() {
 
 // 급식메뉴 불러와서 데이터 삽입
 function getMenuFront(ymd, callback) {
+
+    // 메뉴 가져오기
     Object(_getMenu__WEBPACK_IMPORTED_MODULE_1__["getMenu"])(ymd, (time, data) => {
+        // 데이터가 없을 경우
         if (!data) {
             jquery__WEBPACK_IMPORTED_MODULE_0___default()(`#${time} > ul`).html("오류가 발생했습니다.");
-        } else jquery__WEBPACK_IMPORTED_MODULE_0___default()(`#${time} > ul`).html(data);
+        } else {
+            jquery__WEBPACK_IMPORTED_MODULE_0___default()(`#${time} > ul`).html(data);
+        }
+
+        // 여기가 원래 콜백위치
         callback && callback();
     });
 }
 
 // setting save-btn
-jquery__WEBPACK_IMPORTED_MODULE_0___default()(document).on("click", "#ok", function() {
+jquery__WEBPACK_IMPORTED_MODULE_0___default()(document).on("click", "#ok", function () {
     console.log("save");
-    // let office = $('#office').val()
-    // let school = $('#school').val()
-    // let level = $('input[name=level]:checked').val()
-
-    let setting = { office: office, school: school, level: level, name: name };
+    // 세팅 데이터 가져오기
+    let setting = {office: office, school: school, level: level, name: name};
 
     // setting 저장
-    chrome.storage.sync.set(setting, function() {
-        getMenuFront(Object(_getYmd__WEBPACK_IMPORTED_MODULE_2__["default"])(new Date()), () => {
-            alert("저장되었습니다!");
-            location.href = "../index.html";
-        });
+    chrome.storage.sync.set(setting, function () {
+        let chk = 0;
+        Object(_getMenu__WEBPACK_IMPORTED_MODULE_1__["getMenu"])(Object(_getYmd__WEBPACK_IMPORTED_MODULE_2__["default"])(new Date()), (time, data) => {
+            console.log(time, data);
+            if (!data) {
+                alert('설정 저장에 오류가 있습니다.');
+            } else {
+                chrome.storage.sync.set({[time]: data});
+
+                chk++;
+                // 모든 데이터를 불러왔을 때 이동한다.
+                if (chk === 2) {
+                    location.replace('/index.html');
+                    alert('저장완료');
+                }
+            }
+        }, true);
+
+
     });
 });
 
 // 취소
-jquery__WEBPACK_IMPORTED_MODULE_0___default()(document).on("click", "#cancel", function() {
-    location.href = "../index.html";
+jquery__WEBPACK_IMPORTED_MODULE_0___default()(document).on("click", "#cancel", function () {
+    location.replace("/index.html");
 });
-
-// 학교 검색
-// $(document).on('click', '#search', function () {
-//     let url = 'https://www.meatwatch.go.kr/biz/bm/sel/schoolListPopup.do'
-//     window.open(url, '학교코드 검색', 'height=400, width=500')
-// })
-
 
 /***/ }),
 /* 6 */

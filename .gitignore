@@ -131,3 +131,6 @@ $RECYCLE.BIN/
 
 # 압축 파일
 *.zip
+
+# PhpStorm 설정파일
+.idea
