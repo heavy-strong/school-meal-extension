@@ -1,0 +1,23 @@
+{
+    "name": "school-meal-extension",
+    "version": "1.0.0",
+    "private": true,
+    "scripts": {
+        "build": "./node_modules/.bin/webpack --mode=none",
+        "watch": "./node_modules/.bin/webpack --mode=none --watch",
+        "build:prod": "./node_modules/.bin/webpack"
+    },
+    "description": "전국 초, 중, 고등학교 급식 보기",
+    "repository": "https://github.com/Jrady721/School-meal-extension",
+    "author": "Jrady721 <Jrady721@gmail.com>",
+    "license": "MIT",
+    "devDependencies": {
+        "@types/chrome": "^0.0.82",
+        "eslint": "^5.16.0",
+        "webpack": "^4.29.6",
+        "webpack-cli": "^3.3.0"
+    },
+    "dependencies": {
+        "jquery": "^3.4.0"
+    }
+}
