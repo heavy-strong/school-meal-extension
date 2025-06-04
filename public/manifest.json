@@ -1,0 +1,40 @@
+{
+  "name": "전국 급식",
+  "short_name": "전국 급식",
+  "version": "1.3.0",
+  "description": "전국 초, 중, 고등학교 급식을 알려주는 확장프로그램입니다.",
+  "manifest_version": 3,
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "permissions": [
+    "tabs",
+    "activeTab",
+    "scripting",
+    "cookies",
+    "declarativeContent",
+    "storage",
+    "notifications"
+  ],
+  "action": {
+    "default_popup": "index.html"
+  },
+  "background": {
+    "service_worker": "scripts/background.js"
+  },
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "icons/icon48.png"
+      ],
+      "matches": [
+        "<all_urls>"
+      ]
+    }
+  ],
+  "host_permissions": [
+    "https://jrady721.cafe24.com/"
+  ]
+}
